@@ -1,84 +1,60 @@
-import React from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+import React, { useState, useEffect } from 'react'
+import { BrowserRouter, Switch, Route } from "react-router-dom"
+import Axios from "axios"
+import Header from "./components/layout/Header"
+import Home from "./components/pages/Home"
+import Login from "./components/auth/Login"
+import Register from "./components/auth/Register"
+import UserContext from "./components/context/UserContext"
 
-// This site has 3 pages, all of which are rendered
-// dynamically in the browser (not server rendered).
-//
-// Although the page does not ever refresh, notice how
-// React Router keeps the URL up to date as you navigate
-// through the site. This preserves the browser history,
-// making sure things like the back button and bookmarks
-// work properly.
+import "./style.css"
 
-export default function BasicExample() {
-  return (
-    <Router>
-      <div>
-        <ul>
-          <li>
-            <NavLink to="/">Home</NavLink>
-          </li>
-          <li>
-            <NavLink to="/about">About</NavLink>
-          </li>
-          <li>
-            <NavLink to="/dashboard">Dashboard</NavLink>
-          </li>
-        </ul>
+export default function App() {
+	const [userData, setUserData] = useState({
+		token: undefined,
+		user: undefined,
+	})
 
-        <hr />
+	// called on page loading must make aync func inside this
+	useEffect(() => {
+		const checkLoggedIn = async () => {
+			let token = localStorage.getItem("auth-token")
+			if (token === null) {
+				localStorage.setItem("auth-token", "")
+				token = ""
+			}
+			const tokenRes = await Axios.post(
+				"http://localhost:3003/users/tokenIsValid",
+				null,
+				{
+					headers: { "x-auth-token": token}
+				}
+			)
+			if (tokenRes.data) {
+				const userRes = await Axios.get("http://localhost:3003/users/",
+				{ headers: {"x-auth-token": token}
+				})
+				setUserData({
+					token,
+					user: userRes.data,
+				})
+			}
+			console.log(tokenRes.data)
+		}
 
-        {/*
-          A <Switch> looks through all its children <Route>
-          elements and renders the first one whose path
-          matches the current URL. Use a <Switch> any time
-          you have multiple routes, but you want only one
-          of them to render at a time
-        */}
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="/newuser">
-            <Dashboard />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
-  );
-}
+		checkLoggedIn()
+	}, [])
 
-// You can think of these components as "pages"
-// in your app.
-
-function Home() {
-  return (
-    <div>
-      <h2>Home</h2>
-    </div>
-  );
-}
-
-function About() {
-  return (
-    <div>
-      <h2>About</h2>
-    </div>
-  );
-}
-
-function NewUser() {
-  return (
-    <div>
-      <h2>Create an account!</h2>
-    </div>
-  );
+	return <>
+		<BrowserRouter>
+		<UserContext.Provider value={{userData, setUserData}}>
+			<Header />
+			<Switch>
+				<Route exact path="/" component={Home} />
+				<Route path="/login" component={Login} />
+				<Route path="/register" component={Register} />
+			</Switch>
+		</UserContext.Provider>
+		</BrowserRouter>
+	</>
 }
