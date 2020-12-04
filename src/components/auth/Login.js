@@ -32,12 +32,12 @@ export default function Login() {
 	}
 
 	return (
-		<Container>
-			<h2>Login</h2>
+		<Container className="bg-dark text-light shadow p-3 mb-5 rounded">
+			<h2 className="text-center">Login</h2>
 			{error && (
 				<ErrorWarning message={error} clearError={() => setError(undefined)} />
 			)}
-			<Form onSubmit={submit}>
+			<Form className="" onSubmit={submit}>
 
 			  <Form.Group controlId="formBasicEmail">
 			    <Form.Label>Email address</Form.Label>
@@ -54,7 +54,7 @@ export default function Login() {
 					onChange={(e) => setPassword(e.target.value)}
 					/>
 			  </Form.Group>
-				<Button variant="primary" type="submit" value="Login">
+				<Button variant="secondary" type="submit" value="Login">
 			    Login
 			  </Button>
 			</Form>
