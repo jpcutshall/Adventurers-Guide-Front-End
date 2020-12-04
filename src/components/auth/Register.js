@@ -39,6 +39,7 @@ export default function Register() {
 
 	return (
 		<Container>
+			<h2>Register</h2>
 		{error && (
 			<ErrorWarning message={error} clearError={() => setError(undefined)} />
 		)}
