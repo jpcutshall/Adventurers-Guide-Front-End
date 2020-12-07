@@ -1,7 +1,7 @@
 import React from "react"
 import {Link} from "react-router-dom"
 import AuthOptions from "../auth/AuthOptions"
-import {Navbar, Button, Form, Nav, NavDropdown, FormControl} from 'react-bootstrap'
+import {Navbar, Form, Nav, NavDropdown} from 'react-bootstrap'
 
 export default function Header() {
 	return (
