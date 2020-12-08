@@ -6,6 +6,8 @@ import { Button, Form, Container} from "react-bootstrap"
 import Axios from "axios"
 
 export default function Login() {
+	const backEndUrl = "http://localhost:3003"
+
 	const [email, setEmail] = useState()
 	const [password, setPassword] = useState()
 	const [error, setError] = useState()
@@ -18,7 +20,7 @@ export default function Login() {
 		e.preventDefault()
 		try{
 			const loginUser = {email, password}
-			const loginRes = await Axios.post("http://localhost:3003/users/login", loginUser
+			const loginRes = await Axios.post( backEndUrl + "/users/login", loginUser
 			)
 			setUserData({
 				token: loginRes.data.token,

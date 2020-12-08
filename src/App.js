@@ -4,6 +4,7 @@ import Axios from "axios"
 import Header from "./components/layout/Header"
 import Home from "./components/pages/Home"
 import Login from "./components/auth/Login"
+import Post from "./components/pages/Post"
 import Register from "./components/auth/Register"
 import UserContext from "./components/context/UserContext"
 

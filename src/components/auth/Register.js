@@ -3,15 +3,20 @@ import { useHistory } from "react-router-dom"
 import UserContext from "../context/UserContext"
 import ErrorWarning from "../error/ErrorWarning"
 import { Button, Form, Container} from "react-bootstrap"
+import { Person, Eye, EyeSlash } from "react-bootstrap-icons"
 import Axios from "axios"
 
 export default function Register() {
+
+	const backEndUrl = "http://localhost:3003"
+	
 
 	const [email, setEmail] = useState()
 	const [password, setPassword] = useState()
 	const [passwordCheck, setPasswordCheck] = useState()
 	const [username, setUsername] = useState()
 	const [error, setError] = useState()
+	const[passwordShow, setPasswordShow] = useState(false)
 
 	const { setUserData } = useContext(UserContext)
 	const history = useHistory()
@@ -20,9 +25,9 @@ export default function Register() {
 		e.preventDefault()
 		try {
 			const newUser = {email, password, passwordCheck, username}
-			const registerRes = await Axios.post("http://localhost:3003/users/register", newUser
+			const registerRes = await Axios.post( backEndUrl + "/users/register", newUser
 			)
-			const loginRes = await Axios.post("http://localhost:3003/users/login", {
+			const loginRes = await Axios.post( backEndUrl + "/users/login", {
 				email,
 				password
 			})
@@ -38,8 +43,8 @@ export default function Register() {
 	}
 
 	return (
-		<Container>
-			<h2>Register</h2>
+		<Container className="bg-dark text-light shadow p-3 mb-5 rounded">
+			<h2 className="text-center">Register</h2>
 		{error && (
 			<ErrorWarning message={error} clearError={() => setError(undefined)} />
 		)}
@@ -67,24 +72,36 @@ export default function Register() {
 
 
 			  <Form.Group controlId="formBasicPassword">
-			    <Form.Label>Password</Form.Label>
+			    <Form.Label>
+					Password
+					{
+						passwordShow 
+						?
+						<EyeSlash className="text-center" size={25} onClick={(e) => setPasswordShow(!passwordShow)}/>
+						:
+						<Eye size={25} onClick={(e) => setPasswordShow(!passwordShow)}/>
+					}
+					</Form.Label>
 			    <Form.Control
-					type="password" placeholder="Password"
+					type={passwordShow ? 'text' : 'password'} placeholder="Password"
 					onChange={(e) => setPassword(e.target.value)}
 					/>
+				
+					
 			  </Form.Group>
 
 				<Form.Group controlId="formBasicPasswordCheck">
 			    <Form.Label>Password</Form.Label>
 			    <Form.Control
-					type="password" placeholder="Verify Password"
+					type={passwordShow ? 'text' : 'password'} placeholder="Verify Password"
 					onChange={(e) => setPasswordCheck(e.target.value)}
 					/>
 			  </Form.Group>
 
 
-			  <Button variant="primary" type="submit" value="Register">
-			    Submit
+			  <Button variant="secondary" type="submit" value="Register">
+				  <Person size={33} />
+			    Register
 			  </Button>
 			</Form>
 		</Container>
