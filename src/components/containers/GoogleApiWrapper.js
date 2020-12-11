@@ -37,6 +37,7 @@ export default function GoogleApiWrapper(props) {
       lng: event.latLng.lng(),
       time: new Date()
     })
+    center = { lat: event.latLng.lat(), lng: event.latLng.lng()}
     if (props.setCoords) {
       props.setCoords(event.latLng.lat(), event.latLng.lng())
     }
@@ -59,13 +60,14 @@ export default function GoogleApiWrapper(props) {
   
 
 
-  const center = {
+  let center = {
     lat: props.lat ? Number.parseFloat(props.lat, 10) : 34,
     lng: props.lng ? Number.parseFloat(props.lng, 10) : -83
   }
 
   useEffect(() => {
-    if(props.lat){
+    if(props.lat && !marker){
+
       setMarker({
         lat: Number.parseFloat(props.lat, 10),
         lng: Number.parseFloat(props.lng, 10),

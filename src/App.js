@@ -21,27 +21,34 @@ export default function App() {
 	// called on page loading must make async func inside this
 	useEffect(() => {
 		const checkLoggedIn = async () => {
-			let token = localStorage.getItem("auth-token")
-			if (token === null) {
-				localStorage.setItem("auth-token", "")
-				token = ""
-			}
-			const tokenRes = await Axios.post(
-				process.env.REACT_APP_API_URL + "/users/tokenIsValid",
-				null,
-				{
-					headers: { "x-auth-token": token}
+			try {
+				let token = localStorage.getItem("auth-token")
+				if (token === null) {
+					localStorage.setItem("auth-token", "")
+					token = ""
 				}
-			)
-			if (tokenRes.data) {
-				const userRes = await Axios.get(process.env.REACT_APP_API_URL + "/users/",
-				{ headers: {"x-auth-token": token}
-				})
-				
-				setUserData({
-					token,
-					user: userRes.data,
-				})
+				const tokenRes = await Axios.post(
+					process.env.REACT_APP_API_URL + "/users/tokenIsValid",
+					null,
+					{
+						headers: { "x-auth-token": token}
+					}
+				)
+				console.log('tokenRes.data', tokenRes.data)
+				if (tokenRes.data) {
+					const userRes = await Axios.get(process.env.REACT_APP_API_URL + "/users/" ,
+					{ 
+						headers: {"x-auth-token": token}
+					})
+					console.log('tokenRes tokenIsValid', tokenRes)
+					console.log('userRes', userRes)
+					setUserData({
+						token,
+						user: userRes.data,
+					})
+				}
+			} catch (err) {
+
 			}
 			
 		}
@@ -59,7 +66,7 @@ export default function App() {
 				<Route path="/register" component={Register} />
 				<Route path="/post" component={Post} />
 				<Route path="/posts/:id"> <ShowPost /></Route>
-				<Route path="/posts/edit/:id"> <EditPost /></Route>
+				<Route path="/edit/:id"> <EditPost /></Route>
 			</Switch>
 		</UserContext.Provider>
 		</BrowserRouter>

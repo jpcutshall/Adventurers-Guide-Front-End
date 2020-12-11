@@ -9,23 +9,32 @@ import GoogleApiWrapper from "../containers/GoogleApiWrapper"
 export default function ShowPosts() {
     const [post, setPost] = useState({})
     const {userData} = useContext(UserContext)
-    let { id } = useParams()
+    const { id } = useParams()
     const history = useHistory()
+
+    const checkEditPriv = () => {
+        console.log('Checking edit')
+        console.log(userData.user)
+        console.log(id)
+            
+    }
 
     useEffect(() => {
         const getPost = async () => {
             const getPostRes = await Axios.get(process.env.REACT_APP_API_URL + "/posts/" + id)
             setPost(getPostRes.data)
-            console.log('Showing Post', getPostRes.data)
+            console.log('Showing Post userID', getPostRes.data)
         }
+        
 
         getPost()
+        checkEditPriv()
 
     }, [])
 
     
     const editPost = () => {
-        history.push('/posts/edit/' + id)
+        history.push('/edit/' + id)
     }
 
     return (
@@ -60,18 +69,19 @@ export default function ShowPosts() {
                 </>
                     : null
             }
-            {  userData.user.id == id.toString() ?
+            {  userData.user.id === post.user ?
                 <>
                     <Row>
                         <Col>
                             <Button
                             className="m-3 btn btn-secondary"
-                            onClick={() => editPost}
+                            onClick={editPost}
                             >Edit</Button>
                         </Col>
                     </Row>
                 </>
                     : <><Row><Col>...</Col></Row></>
+                    
             }
                
         </Container>

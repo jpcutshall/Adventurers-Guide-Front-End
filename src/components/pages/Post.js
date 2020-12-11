@@ -47,7 +47,7 @@ export default function Post() {
                 headers: {"x-auth-token": localStorage.getItem("auth-token")}
             }
             )
-
+            console.log(postRes)
             setLoading(false)
             history.push("/")
         } catch (err) {

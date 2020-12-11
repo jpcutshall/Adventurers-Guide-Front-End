@@ -40,7 +40,8 @@ export default function PostsContainer(props) {
                     <Card.Text>{post.about}</Card.Text>
                 </Card.Body>
                 <Card.Footer>
-                    <small className="text-muted">Created at {post.created_at}, last edited {post.updatedAt} </small>
+                    <small className="text-muted">Created at {new Date(post.created_at).toDateString()}, 
+                        last edited {new Date(post.updatedAt).toDateString()} </small>
                 </Card.Footer>
             </Card>
         ))
