@@ -1,5 +1,4 @@
 import React from "react"
-import {Link} from "react-router-dom"
 import AuthOptions from "../auth/AuthOptions"
 import {Navbar, Form, Nav} from 'react-bootstrap'
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import Axios from 'axios'
-import { Container, Card, CardColumns, Button} from 'react-bootstrap'
+import { Card, CardColumns } from 'react-bootstrap'
 
 export default function PostsContainer(props) {
     const [ posts, setPosts ] = useState([])
@@ -23,10 +23,17 @@ export default function PostsContainer(props) {
         history.push('/posts/' + postId)
     }
 
+    const onHover = (event) => {
+        //event.target.style.borderColor = 'blue'
+    
+    }
+
     const PostsList = () => {
         const cards = posts.map( (post) => (
             <Card onClick={() => openPost(post._id)}
             key={post._id}
+            className="btn"
+            onMouseOver={onHover}
             >
                 <Card.Body>
                     <Card.Title>{post.name}</Card.Title>

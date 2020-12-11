@@ -1,7 +1,7 @@
-import React, { useState } from "react"
+import React from "react"
 import PostsContainer from "../containers/PostsContainer"
 import { Container } from "react-bootstrap"
-import Axios from "axios"
+
 
 export default function Home() {
 	

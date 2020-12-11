@@ -1,24 +1,32 @@
-import React, { useState, useEffect } from 'react'
-import { Container, Button } from 'react-bootstrap'
-import { useParams } from 'react-router-dom'
+import React, { useState, useEffect, useContext } from 'react'
+import UserContext from "../context/UserContext"
+import { Container, Row, Col, Button } from 'react-bootstrap'
+import { useParams, useHistory } from 'react-router-dom'
 import Axios from 'axios'
 import GoogleApiWrapper from "../containers/GoogleApiWrapper"
 
 
 export default function ShowPosts() {
     const [post, setPost] = useState({})
+    const {userData} = useContext(UserContext)
     let { id } = useParams()
-    console.log('PARAMS IS===', id)
+    const history = useHistory()
 
     useEffect(() => {
         const getPost = async () => {
             const getPostRes = await Axios.get(process.env.REACT_APP_API_URL + "/posts/" + id)
             setPost(getPostRes.data)
+            console.log('Showing Post', getPostRes.data)
         }
 
         getPost()
 
     }, [])
+
+    
+    const editPost = () => {
+        history.push('/posts/edit/' + id)
+    }
 
     return (
         <Container className="m-3 text-center">
@@ -29,7 +37,7 @@ export default function ShowPosts() {
             </div>
             <div>
                 <h3>Location</h3>
-                <GoogleApiWrapper lat={post.lat} lng={post.long} />
+                <GoogleApiWrapper lat={post.lat} lng={post.long} post={true} />
             </div>
             { post.background ?
                 <>
@@ -52,6 +60,20 @@ export default function ShowPosts() {
                 </>
                     : null
             }
+            {  userData.user.id == id.toString() ?
+                <>
+                    <Row>
+                        <Col>
+                            <Button
+                            className="m-3 btn btn-secondary"
+                            onClick={() => editPost}
+                            >Edit</Button>
+                        </Col>
+                    </Row>
+                </>
+                    : <><Row><Col>...</Col></Row></>
+            }
+               
         </Container>
 
     )

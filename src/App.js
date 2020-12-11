@@ -8,6 +8,7 @@ import Post from "./components/pages/Post"
 import Register from "./components/auth/Register"
 import UserContext from "./components/context/UserContext"
 import ShowPost from "./components/pages/ShowPost"
+import EditPost from "./components/pages/EditPost"
 
 
 export default function App() {
@@ -36,13 +37,13 @@ export default function App() {
 				const userRes = await Axios.get(process.env.REACT_APP_API_URL + "/users/",
 				{ headers: {"x-auth-token": token}
 				})
-				console.log("USERRES ", userRes.data)
+				
 				setUserData({
 					token,
 					user: userRes.data,
 				})
 			}
-			console.log(tokenRes.data)
+			
 		}
 
 		checkLoggedIn()
@@ -58,6 +59,7 @@ export default function App() {
 				<Route path="/register" component={Register} />
 				<Route path="/post" component={Post} />
 				<Route path="/posts/:id"> <ShowPost /></Route>
+				<Route path="/posts/edit/:id"> <EditPost /></Route>
 			</Switch>
 		</UserContext.Provider>
 		</BrowserRouter>

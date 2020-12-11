@@ -25,6 +25,7 @@ export default function GoogleApiWrapper(props) {
   const [ selected, setSelected] = useState(null)
   const [ isShowing, setShowing] = useState(false)
   
+  
   const onMapClick = useCallback((event) => {
     if (isShowing) {
       return
@@ -41,25 +42,21 @@ export default function GoogleApiWrapper(props) {
     }
   }, [])
 
+
+  const checkShow = () => {
+    console.log("checkingSHow")
+      props.post ? setShowing(true) : setShowing(false)
+              
+  }
   const mapRef = useRef()
   const onMapLoad = useCallback((map) => {
+    console.log("onMapLoad")
+    checkShow()
     
     mapRef.current = map
   }, [])
 
-  useEffect(() => {
-    console.log("useEffect GOOGLEAPICONTAINER")
-    const checkIfPost = () => {
-     if (props.lat && props.lng) {
-          setShowing(true)
-          setMarker({
-            lat: Number.parseFloat(props.lat, 10),
-            lng: Number.parseFloat(props.lng, 10)
-          })
-        }
-      }
-    checkIfPost()
-  }, [])
+  
 
 
   const center = {
@@ -67,9 +64,18 @@ export default function GoogleApiWrapper(props) {
     lng: props.lng ? Number.parseFloat(props.lng, 10) : -83
   }
 
-    
+  useEffect(() => {
+    if(props.lat){
+      setMarker({
+        lat: Number.parseFloat(props.lat, 10),
+        lng: Number.parseFloat(props.lng, 10),
+        time: new Date(),
+      })
+    }
+  }, [props])
+
   return (
-    <Container className="m-5">
+    <Container className="mr-5 ml-5 mb-5 rounded">
         <LoadScript
         googleMapsApiKey={googleMapsApiKey}
         >
@@ -80,6 +86,13 @@ export default function GoogleApiWrapper(props) {
           options={options}
           onClick={isShowing ? null : onMapClick}
           onLoad={onMapLoad}
+          onUnmount={map => {
+            props.lat ? setMarker({
+              lat: Number.parseFloat(props.lat, 10),
+              lng: Number.parseFloat(props.lng, 10),
+              time: new Date(),
+            }) : setMarker(center)
+          }}
           >
             { marker ?
               <Marker 
