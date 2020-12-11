@@ -85,6 +85,7 @@ export default function EditPost() {
             setGtk(getPostRes.data.gtk)
             setLat(getPostRes.data.lat)
             setLong(getPostRes.data.long)
+            setTags(getPostRes.data.tags)
         }
 
         getPost()
@@ -100,21 +101,21 @@ export default function EditPost() {
             <Form onSubmit={submit}>
                 <Form.Group controlId="formBasicText">
                     <Form.Control 
-                    type="text" value={post.name}
+                    type="text" value={name}
                     onChange={ (e) => setName(e.target.value)}
                     />
                 </Form.Group>
 
                 <Form.Group controlId="formBasicTextArea">
                     <Form.Control 
-                    as="textarea" rows={3} value={post.about}
+                    as="textarea" rows={3} value={about}
                     onChange={ (e) => setAbout(e.target.value)}
                     />
                 </Form.Group>
 
                 <Form.Group controlId="formBasicTextArea">
                     <Form.Control 
-                    as="textarea" rows={3} value={post.background}
+                    as="textarea" rows={3} value={background}
                     placeholder="History - any history is acceptable - please reference if possible"
                     onChange={(e) => setBackground(e.target.value)}
                     />
@@ -122,14 +123,14 @@ export default function EditPost() {
 
                 <Form.Group controlId="formBasicTextArea">
                     <Form.Control 
-                    as="textarea" rows={2}  value={post.camping}
+                    as="textarea" rows={2}  value={camping}
                     placeholder="Camping - info about camping - Camping spot? - leave no trace? Atleast 200 ft from trail?"
                     onChange={ (e) => setCamping(e.target.value)}
                     />
                 </Form.Group>
                 <Form.Group controlId="formBasicTextArea">
                     <Form.Control 
-                    as="textarea" rows={3} value={post.gtk}
+                    as="textarea" rows={3} value={gtk}
                     placeholder="Good To know - Laws, closures, permits, Events "
                     onChange={ (e) => setGtk(e.target.value)}
                     />
@@ -155,7 +156,7 @@ export default function EditPost() {
 
                 <Form.Group controlId="formBasicText">
                     <Form.Control 
-                    type="text" value={post.tags}
+                    type="text" value={tags}
                     placeholder="tags"
                     onChange={ (e) => setTags(e.target.value)}
                     />

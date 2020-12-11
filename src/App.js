@@ -6,6 +6,7 @@ import Home from "./components/pages/Home"
 import Login from "./components/auth/Login"
 import Post from "./components/pages/Post"
 import About from "./components/pages/About"
+import Donate from "./components/pages/Donate"
 import Register from "./components/auth/Register"
 import UserContext from "./components/context/UserContext"
 import ShowPost from "./components/pages/ShowPost"
@@ -67,6 +68,7 @@ export default function App() {
 				<Route path="/register" component={Register} />
 				<Route path="/post" component={Post} />
 				<Route path="/about" component={About} />
+				<Route path="/fakedonate" component={Donate} />
 				<Route path="/posts/:id"> <ShowPost /></Route>
 				<Route path="/edit/:id"> <EditPost /></Route>
 			</Switch>
