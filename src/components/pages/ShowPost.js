@@ -41,35 +41,35 @@ export default function ShowPosts() {
         <Container className="m-3 text-center">
             <h1 className="text-center m-3">{post.name}</h1>
             <div>
-                <h3>About</h3>
-                <p>{post.about}</p>
+                <h3 className="m-3 text-center shadow-sm rounded">About</h3>
+                <p className="m-3 text-center shadow-sm rounded">{post.about}</p>
             </div>
-            <div>
+            <div className="m-3 text-center shadow-sm rounded">
                 <h3>Location</h3>
                 <GoogleApiWrapper lat={post.lat} lng={post.long} post={true} />
             </div>
             { post.background ?
                 <>
-                    <h3>History</h3>
-                    <p>{post.background}</p> 
+                    <h3 className="m-3 text-center shadow-sm rounded">History</h3>
+                    <p className="m-3 text-center shadow-sm rounded">{post.background}</p> 
                 </>    
                     : null
             }
             { post.camping ?
                 <>
-                    <h3>Camping Info</h3>
-                    <p>{post.camping}</p> 
+                    <h3 className="m-3 text-center shadow-sm rounded">Camping Info</h3>
+                    <p className="m-3 text-center shadow-sm rounded">{post.camping}</p> 
                 </>
                     : null
             }
             { post.gtk ?
                 <>
-                    <h3>Good To Know</h3>
-                    <p>{post.gtk}</p> 
+                    <h3 className="m-3 text-center shadow-sm rounded">Good To Know</h3>
+                    <p className="m-3 text-center shadow-sm rounded">{post.gtk}</p> 
                 </>
                     : null
             }
-            {  userData.user.id === post.user ?
+            {  userData.user ?
                 <>
                     <Row>
                         <Col>

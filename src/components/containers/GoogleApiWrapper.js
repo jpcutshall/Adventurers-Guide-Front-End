@@ -37,7 +37,7 @@ export default function GoogleApiWrapper(props) {
       lng: event.latLng.lng(),
       time: new Date()
     })
-    center = { lat: event.latLng.lat(), lng: event.latLng.lng()}
+    
     if (props.setCoords) {
       props.setCoords(event.latLng.lat(), event.latLng.lng())
     }
@@ -73,7 +73,9 @@ export default function GoogleApiWrapper(props) {
         lng: Number.parseFloat(props.lng, 10),
         time: new Date(),
       })
+      
     }
+    
   }, [props])
 
   return (
@@ -83,7 +85,9 @@ export default function GoogleApiWrapper(props) {
         >
           <GoogleMap
           mapContainerStyle={mapContainerStyle}
-          center={center}
+          center={marker ? {
+            lat: marker.lat, lng: marker.lng
+          } : {lat: 34, lng: -81}}
           zoom={isShowing ? 10 : 5}  
           options={options}
           onClick={isShowing ? null : onMapClick}
