@@ -6,7 +6,7 @@ import { Button, Form, Container} from "react-bootstrap"
 import Axios from "axios"
 
 export default function Login() {
-	const backEndUrl = "http://localhost:3003"
+	const backEndUrl = process.env.REACT_APP_API_URL
 
 	const [email, setEmail] = useState()
 	const [password, setPassword] = useState()
@@ -22,6 +22,7 @@ export default function Login() {
 			const loginUser = {email, password}
 			const loginRes = await Axios.post( backEndUrl + "/users/login", loginUser
 			)
+			console.log('loginRes.data', loginRes.data)
 			setUserData({
 				token: loginRes.data.token,
 				user: loginRes.data.user

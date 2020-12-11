@@ -7,8 +7,8 @@ import Login from "./components/auth/Login"
 import Post from "./components/pages/Post"
 import Register from "./components/auth/Register"
 import UserContext from "./components/context/UserContext"
+import ShowPost from "./components/pages/ShowPost"
 
-import "./style.css"
 
 export default function App() {
 	const [userData, setUserData] = useState({
@@ -16,7 +16,8 @@ export default function App() {
 		user: undefined,
 	})
 
-	// called on page loading must make aync func inside this
+
+	// called on page loading must make async func inside this
 	useEffect(() => {
 		const checkLoggedIn = async () => {
 			let token = localStorage.getItem("auth-token")
@@ -25,16 +26,17 @@ export default function App() {
 				token = ""
 			}
 			const tokenRes = await Axios.post(
-				"http://localhost:3003/users/tokenIsValid",
+				process.env.REACT_APP_API_URL + "/users/tokenIsValid",
 				null,
 				{
 					headers: { "x-auth-token": token}
 				}
 			)
 			if (tokenRes.data) {
-				const userRes = await Axios.get("http://localhost:3003/users/",
+				const userRes = await Axios.get(process.env.REACT_APP_API_URL + "/users/",
 				{ headers: {"x-auth-token": token}
 				})
+				console.log("USERRES ", userRes.data)
 				setUserData({
 					token,
 					user: userRes.data,
@@ -55,6 +57,7 @@ export default function App() {
 				<Route path="/login" component={Login} />
 				<Route path="/register" component={Register} />
 				<Route path="/post" component={Post} />
+				<Route path="/posts/:id"> <ShowPost /></Route>
 			</Switch>
 		</UserContext.Provider>
 		</BrowserRouter>

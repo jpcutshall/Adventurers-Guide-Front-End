@@ -23,7 +23,7 @@ export default function AuthOptions() {
 	const logout = () => {
 		setUserData({
 			token: undefined,
-			user: undefined
+			user: undefined,
 		})
 		localStorage.setItem("auth-token", "")
 	}
@@ -33,13 +33,13 @@ export default function AuthOptions() {
 			{
 				userData.user ? (
 				<>	
-				<Button onClick={post}>Post</Button>
-				<Button onClick={logout}>Log out</Button>
+				<Button className="mr-2" onClick={post}>Post</Button>
+				<Button className="mr-2" onClick={logout}>Log out</Button>
 				</>
 			) : (
 				<>
-					<Button onClick={register}>Register</Button>
-					<Button onClick={login}>Login</Button>
+					<Button className="mr-2" onClick={register}>Register</Button>
+					<Button className="mr-2" onClick={login}>Login</Button>
 				</>
 			)}
 		</nav>

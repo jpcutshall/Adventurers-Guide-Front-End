@@ -1,86 +1,104 @@
-import React, {useState, useContext, useCallback} from "react";
+import React, {useState, useContext, useEffect} from "react";
 import Axios from "axios"
 import { useHistory } from "react-router-dom"
-import { Form, Button, Container } from "react-bootstrap"
-import { GoogleMap, LoadScript } from '@react-google-maps/api';
-import ErroWarning from "../error/ErrorWarning"
+import UserContext from "../context/UserContext"
+import { Form, Button, Container, Spinner } from "react-bootstrap"
+import GoogleApiWrapper from "../containers/GoogleApiWrapper"
+import ErrorWarning from "../error/ErrorWarning"
 
 const containerStyle = {
-    width: '400px',
-    height: '400px'
+    width: '600px',
+    height: '600px'
   };
 
 export default function Post() {
-    const backEndUrl = "http://localhost:3003"
-    const [map, setMap] = useState()
+    const backEndUrl = process.env.REACT_APP_API_URL
     const [name, setName] = useState()
     const [about, setAbout] = useState()
     const [background, setBackground] = useState()
     const [camping, setCamping] = useState()
     const [gtk, setGtk] = useState()
-    const [lati, setLati] = useState()
-    const [long, setLong] = useState()
+    const [lat, setLat] = useState('')
+    const [long, setLong] = useState('')
     const [tags, setTags] = useState()
+    const [isLoading, setLoading] = useState(false)
     const [error, setError] = useState()
-
+    
+    const {userData} = useContext(UserContext)
     const history = useHistory()
+    
 
-    const onLoad = useCallback(function callback(map) {
-        const bounds = new window.google.maps.LatLngBounds();
-        map.fitBounds(bounds);
-        setMap(map)
-      }, [])
-     
-      const onUnmount = useCallback(function callback(map) {
-        setMap(null)
-      }, [])
+    const setLatAndLng = (lat, lng) => {
+        setLat(lat)
+        setLong(lng)
+    }
+
+    const handleClick = (e) => {
+        setLoading(true)
+        submit(e)
+    }
+
+    useEffect(() => {
+         //console.log('userData ', userData)
+    })
 
     const submit = async (e) => {
         e.preventDefault()
         try {
-            const newPost = { name, about, background, camping, gtk, lati, long, tags }
-            const postRes = await Axios.post( backEndUrl + "/posts/new", newPost)
-            console.log("POST RESPONSE ::: ", postRes)
+            console.log("DATA", userData.user)
+            const newPost = { name, about, background, camping, gtk, lat, long, tags, user: userData.user.id }
+            console.log('NewPost', newPost)
+            const postRes = await Axios.post( backEndUrl + "/posts", newPost, 
+            {
+                headers: {"x-auth-token": localStorage.getItem("auth-token")}
+            }
+            )
+
+            setLoading(false)
             history.push("/")
         } catch (err) {
             err.response.data.msg && setError(err.response.data.msg)
+            setLoading(false)
         }
     }
 
     return (
         <Container>
-            <h2>New Wiki Post</h2>
+            <h2 className="text-center">New Wiki Post</h2>
+            {error && (
+			<ErrorWarning message={error} clearError={() => setError(undefined)} />
+		    )}
             <Form onSubmit={submit}>
                 <Form.Group controlId="formBasicText">
                     <Form.Control 
-                    type="text" placeholder="Post Name"
+                    type="text" placeholder="Post Name - location name, lake name, forest name"
                     onChange={ (e) => setName(e.target.value)}
                     />
                 </Form.Group>
 
                 <Form.Group controlId="formBasicTextArea">
                     <Form.Control 
-                    as="textarea" rows={3} placeholder="About"
+                    as="textarea" rows={3} placeholder="About - Lake, National park, State park, Trails, Location marker info- basic info"
                     onChange={ (e) => setAbout(e.target.value)}
                     />
                 </Form.Group>
 
                 <Form.Group controlId="formBasicTextArea">
                     <Form.Control 
-                    as="textarea" rows={3} placeholder="History"
+                    as="textarea" rows={3} placeholder="History - any history is acceptable - please reference if possible"
                     onChange={ (e) => setBackground(e.target.value)}
                     />
                 </Form.Group>
 
                 <Form.Group controlId="formBasicTextArea">
                     <Form.Control 
-                    as="textarea" rows={2} placeholder="Camping"
+                    as="textarea" rows={2} placeholder="Camping - info about camping - Camping spot? - leave no trace? Atleast 200 ft from trail?"
                     onChange={ (e) => setCamping(e.target.value)}
                     />
                 </Form.Group>
                 <Form.Group controlId="formBasicTextArea">
                     <Form.Control 
-                    as="textarea" rows={3} placeholder="Good To know"
+                    as="textarea" rows={3} placeholder="Good To know - Laws, closures, permits, Events "
                     onChange={ (e) => setGtk(e.target.value)}
                     />
                 </Form.Group>
@@ -88,14 +106,18 @@ export default function Post() {
                 <Form.Group controlId="formBasicText">
                     <Form.Control 
                     type="text" placeholder="latitude"
-                    onChange={ (e) => setLati(e.target.value)}
+                    value={lat}
+                    onChange={ (e) => setLat(e.target.value)}
+                    disabled
                     />
                 </Form.Group>
 
                 <Form.Group controlId="formBasicText">
                     <Form.Control 
                     type="text" placeholder="longitude"
+                    value={long}
                     onChange={ (e) => setLong(e.target.value)}
+                    disabled
                     />
                 </Form.Group>
 
@@ -105,31 +127,16 @@ export default function Post() {
                     onChange={ (e) => setTags(e.target.value)}
                     />
                 </Form.Group>
-                <Button variant="secondary" type="submit" value="Submit">
-			    Submit
+                <Button className="m-3" variant="secondary" 
+                type="submit" value="Submit" disabled={isLoading}
+                onClick={!isLoading ? handleClick : null}
+                >
+			    {isLoading ? <Spinner animation="border" role="status"><span className="sr-only">Loading...</span></Spinner> : 'Submit Post'}
 			  </Button>
                     
                 
             </Form>
-            <LoadScript
-                googleMapsApiKey="AIzaSyC12MTCxmUc2gU23kdQl-AsTwQYb8gVnGA"
-            >
-                <GoogleMap
-                    mapContainerStyle={containerStyle}
-                    center={
-                        
-                        {lat: -1,
-                        lng: -30.10}
-                       
-                    }
-                    zoom={10}
-                    onLoad={onLoad}
-                    onUnmount={onUnmount}
-                >
-                { /* Child components, such as markers, info windows, etc. */ }
-                <></>
-                </GoogleMap>
-            </LoadScript>
+            <GoogleApiWrapper setCoords={setLatAndLng}/>
         </Container>
     )
 }

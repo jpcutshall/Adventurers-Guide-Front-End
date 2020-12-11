@@ -8,7 +8,7 @@ import Axios from "axios"
 
 export default function Register() {
 
-	const backEndUrl = "http://localhost:3003"
+	const backEndUrl = process.env.REACT_APP_API_URL
 	
 
 	const [email, setEmail] = useState()
@@ -20,6 +20,11 @@ export default function Register() {
 
 	const { setUserData } = useContext(UserContext)
 	const history = useHistory()
+
+
+	// functions
+
+	
 
 	const submit = async (e) => {
 		e.preventDefault()
@@ -60,8 +65,6 @@ export default function Register() {
 			      We'll never share your email.
 			    </Form.Text>
 			  </Form.Group>
-
-
 				<Form.Group controlId="formBasicUsername">
 			    <Form.Label>Username</Form.Label>
 			    <Form.Control
